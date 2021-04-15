@@ -1,6 +1,3 @@
-import json
-from wsgiref.headers import Headers
-
 from flask import Flask, request
 from flask_restful import reqparse, Resource, Api
 from flask_cors import CORS
@@ -37,6 +34,7 @@ def authorize_token():
 class CoinpressExperiment(Resource):
     def post(self):
         args = parser.parse_args()
+        print(args)
         n_values = args['n_values']
         d = int(args['d'])
         iters = int(args['iters'])
@@ -44,19 +42,6 @@ class CoinpressExperiment(Resource):
         excess_private_loss, excess_nonprivate_loss = \
             lin_reg_interactive.losses(n_values, d, iters, total_privacy_budget)
         return {"excess_private_loss": excess_private_loss, "excess_nonprivate_loss": excess_nonprivate_loss}
-
-# @app.route('/losses', methods=['POST'])
-# def losses():
-#     args = parser.parse_args()
-#     n_values = args['n_values']
-#     d = int(args['d'])
-#     iters = int(args['iters'])
-#     total_privacy_budget = float(args['total_privacy_budget'])
-#     excess_private_loss, excess_nonprivate_loss = \
-#         lin_reg_interactive.losses(n_values, d, iters, total_privacy_budget)
-#     return {"excess_private_loss": excess_private_loss, "excess_nonprivate_loss": excess_nonprivate_loss}
-#     # response.headers['Access-Control-Allow-Origin'] = '*'
-#     # return response
 
 
 @app.after_request
@@ -75,5 +60,3 @@ api.add_resource(CoinpressExperiment, '/losses')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# app.run()

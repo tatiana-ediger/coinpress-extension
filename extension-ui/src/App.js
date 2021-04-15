@@ -3,8 +3,10 @@ import './App.css';
 import { makeStyles, CssBaseline, AppBar, Toolbar, Typography } from '@material-ui/core';
 import { Drawer } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { MenuItem } from '@material-ui/core';
-import Experiments from './pages/experiments/Experiments'
+import { MenuItem, IconButton } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import Experiments from './pages/experiments/Experiments';
+import WelcomePage from './pages/home/WelcomePage';
 import Writeup from './pages/writeup/WriteUp';
 
 const useStyles = makeStyles(theme => ({
@@ -29,6 +31,9 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     color: 'black',
   },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
   toolbar: theme.mixins.toolbar,
 }));
 
@@ -39,8 +44,11 @@ const App = () => {
     <Router>
         <div className={classes.root}>
           <CssBaseline />
-          <AppBar className={classes.appBar}>
+          <AppBar className={classes.appBar} color="default">
             <Toolbar>
+            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
             <Typography variant="h5">CoinPress Extension</Typography>
             </Toolbar>
           </AppBar>
@@ -50,7 +58,9 @@ const App = () => {
               paper: classes.drawerPaper,
             }}>
             <div className={classes.toolbar} />
-
+            <Link className={classes.link} to='/'>
+              <MenuItem>Home</MenuItem>
+            </Link>
             <Link className={classes.link} to='/interactive'>
               <MenuItem>Interactive</MenuItem>
             </Link>
@@ -61,7 +71,7 @@ const App = () => {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Route exact path="/">
-
+              <div><WelcomePage/></div>
             </Route>
             <Route path="/interactive">
               <div><Experiments/></div>
