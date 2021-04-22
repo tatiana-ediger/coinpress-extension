@@ -49,3 +49,21 @@ def coinpress_linreg_mean(z, c, r, d, beta_norm_sqr, total_budget=0.5):
     z = z / np.sqrt(2 * beta_norm_sqr + 1)
     rho = [(1.0 / 4.0) * total_budget, (3.0 / 4.0) * total_budget]
     return algos.multivariate_mean_iterative(z, c, r, 2, rho) * np.sqrt(2 * beta_norm_sqr + 1)
+
+def beta_l2_norm(y, d, t=2, total_budget=0.1):
+    '''need y and args={d, u, rho, t}'''
+    y = torch.FloatTensor(y)
+
+    class Args:
+        def __init__(self, n, d, u, rho, t):
+            self.n = n
+            self.d = d
+            self.u = u
+            self.rho = rho
+            self.t = t
+
+    n = len(y)
+    rho = [(1.0 / 4.0) * total_budget, (3.0 / 4.0) * total_budget]
+    u = 100 * d
+    args = Args(n, d, u, rho, t)
+    return algos.cov_est(y, args) - 1
