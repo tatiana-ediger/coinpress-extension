@@ -25,10 +25,10 @@ def losses(n_values, d, iters, total_privacy_budget, beta_mean=0, beta_var=1.0):
             x, y, z = generate_data(n, d, underlying_dist)
 
             priv_beta_hat = lin_reg_algos.coinpress_linreg(x, y, underlying_dist, c, r, total_privacy_budget)
-            priv_losses_for_n.append(excess_loss(priv_beta_hat, underlying_dist[0], d))
+            priv_losses_for_n.append(loss(priv_beta_hat, underlying_dist[0], d))
 
             nonpriv_beta_hat = linreg_closed_form_solution(x, y)
-            nonpriv_losses_for_n.append(excess_loss(nonpriv_beta_hat, underlying_dist[0], d))
+            nonpriv_losses_for_n.append(loss(nonpriv_beta_hat, underlying_dist[0], d))
 
         priv_losses_for_n = np.array(priv_losses_for_n)
         priv_excess_losses.append(np.mean(priv_losses_for_n))
@@ -76,19 +76,26 @@ def excess_loss(beta_hat, beta, d):
     of our predicted beta_hat vs. underlying distribution beta
     """
 
+def loss(beta_hat, beta, d):
+    
+    # make trimmed mean? throw out 5 most extreme values?
+    
     n = 1000
+    
+    '''generate new x values'''
     x = np.random.normal(0, 1.0, (n, d))
     x = np.array(x)
     y = []
 
+    '''generate new y values based on underlying distribution, beta'''
     for i in range(n):
-        y.append(np.dot(beta, x[i]) + np.random.normal(0, 1))
+        y.append(np.dot(beta, x[i]) + np.random.normal(0, 1.0))
     y = np.array(y)
-
-    sum_losses = 0
-    for i in range(n):
-        predicted_dist = (x[i] @ beta_hat - y[i]) ** 2
-        actual_dist = (x[i] @ beta - y[i]) ** 2  # if this = 1, it's essentially the same thing as n -> \inf
-        loss = predicted_dist - actual_dist
-        sum_losses += loss
-    return sum_losses / n
+    
+    '''find squared accuracy of prediction for each entry of x'''
+    def dist(xi,yi):
+        return (xi @ beta_hat - yi) ** 2 #np.clip((xi @ beta_hat - yi) ** 2, -5, 5) #
+    
+    '''return MSE'''
+    losses = list(map(dist, x, y))
+    return np.mean(np.array(losses))
