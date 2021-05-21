@@ -29,9 +29,8 @@ def coinpress_linreg_mean(z, c, r, d, beta_norm_sqr, total_budget=0.5):
     return algos.multivariate_mean_iterative(z, c, r, 2, rho) * np.sqrt(max(0, 2 * beta_norm_sqr + 1))
 
 
-'''
-NOT CURRENTLY USED (for simplified case)
-def coinpress_linalg_covariance(x, d, t=2, total_budget=0.5):
+
+def coinpress_linreg_covariance(x, d, t=2, total_budget=0.5):
     # need X and args={d, u, rho, t}
     x = torch.FloatTensor(x)
 
@@ -48,7 +47,7 @@ def coinpress_linalg_covariance(x, d, t=2, total_budget=0.5):
     u = 10 * np.sqrt(d)
     args = Args(n, d, u, rho, t)
     return algos.cov_est(x, args)
-'''
+
 
 
 def beta_l2_norm(y, total_budget):
