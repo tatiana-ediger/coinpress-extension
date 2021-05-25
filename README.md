@@ -28,3 +28,5 @@ npm start
 ```
 
 Then you should see the UI pop-up in your default browser and you can interact with this algorithm by tweaking parameters!
+
+To work with the most up-to-date algorithms reflected in the write-up, coin-press/lin_reg_experimentation.ipynb let's you play around with the simplified algorithm, and generate graphs showing n-values vs. population loss. Similarly, coin-press/lin_reg_nonidentity_cov.ipynb and coin-press/lin_reg_nonzero_mean.ipynb have the extensions to the algorithm!
